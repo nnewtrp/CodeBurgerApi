@@ -1,5 +1,6 @@
 package com.codeburger.codeburgerapi.entity;
 
+import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,7 +8,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class MasIngredient {
     @Id
     private String id;
+    @NotNull
     private String name;
-    private Double price;
+    @NotNull
     private String category;
+    @NotNull
+    private Double price;
 }
