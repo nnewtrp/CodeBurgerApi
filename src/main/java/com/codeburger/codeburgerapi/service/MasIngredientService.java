@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MasIngredientService {
@@ -18,6 +19,14 @@ public class MasIngredientService {
 
     public List<MasIngredient> retrieveIngredients() {
         return repository.findAll();
+    }
+
+    public Optional<MasIngredient> retrieveIngredientInfo(String name) {
+        return repository.findByName(name);
+    }
+
+    public List<MasIngredient> retrieveIngredientsByCategory(String category) {
+        return repository.findByCategory(category);
     }
 
 }
