@@ -16,7 +16,7 @@ public class MasIngredientService {
         this.repository = repository;
     }
 
-    public List<MasIngredient> getList() {
+    public List<MasIngredient> retrieveIngredients() {
         return repository.findAll();
     }
 

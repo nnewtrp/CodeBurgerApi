@@ -17,8 +17,8 @@ public class MasIngredientController {
     private MasIngredientService masIngredientService;
 
     @GetMapping()
-    public ResponseEntity<?> getList() {
-        List<MasIngredient> masIngredients = masIngredientService.getList();
+    public ResponseEntity<?> getIngredients() {
+        List<MasIngredient> masIngredients = masIngredientService.retrieveIngredients();
         return ResponseEntity.ok(masIngredients);
     }
 }
