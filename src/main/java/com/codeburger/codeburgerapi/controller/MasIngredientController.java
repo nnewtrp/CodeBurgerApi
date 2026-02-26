@@ -2,6 +2,7 @@ package com.codeburger.codeburgerapi.controller;
 
 import com.codeburger.codeburgerapi.dto.response.DataResponse;
 import com.codeburger.codeburgerapi.dto.response.ErrorResponse;
+import com.codeburger.codeburgerapi.dto.response.MasIngredientResponse;
 import com.codeburger.codeburgerapi.entity.MasIngredient;
 import com.codeburger.codeburgerapi.service.MasIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+
+import static java.util.stream.Collectors.*;
 
 @RestController
 @RequestMapping("master/ingredient")
@@ -22,7 +26,13 @@ public class MasIngredientController {
 
     @GetMapping()
     public ResponseEntity<?> getIngredients() {
-        List<MasIngredient> data = masIngredientService.retrieveIngredients();
+        List<MasIngredient> query = masIngredientService.retrieveIngredients();
+        Map<String, List<MasIngredientResponse>> data = query.stream()
+                .collect(groupingBy(
+                        MasIngredient::getCategory,
+                        mapping(i -> new MasIngredientResponse(i.getName(), i.getPrice()), toList()
+                ))
+        );
         return ResponseEntity.ok(new DataResponse<>(data));
     }
 
@@ -37,10 +47,13 @@ public class MasIngredientController {
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<?> getIngredientByCategory(@PathVariable String categoryName) {
-        List<MasIngredient> data = masIngredientService.retrieveIngredientsByCategory(categoryName);
-        if (data.isEmpty()) {
+        List<MasIngredient> query = masIngredientService.retrieveIngredientsByCategory(categoryName);
+        if (query.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
+        List<MasIngredientResponse> data = query.stream().map(
+                i -> new MasIngredientResponse(i.getName(), i.getPrice())
+        ).toList();
         return ResponseEntity.ok(new DataResponse<>(data));
     }
 }
