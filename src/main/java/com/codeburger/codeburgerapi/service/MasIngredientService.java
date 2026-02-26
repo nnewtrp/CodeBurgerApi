@@ -17,15 +17,15 @@ public class MasIngredientService {
         this.repository = repository;
     }
 
-    public List<MasIngredient> retrieveIngredients() {
+    public List<MasIngredient> retrieve() {
         return repository.findAll();
     }
 
-    public Optional<MasIngredient> retrieveIngredientInfo(String name) {
+    public Optional<MasIngredient> retrieveInfo(String name) {
         return repository.findByName(name);
     }
 
-    public List<MasIngredient> retrieveIngredientsByCategory(String category) {
+    public List<MasIngredient> retrieveByCategory(String category) {
         return repository.findByCategory(category);
     }
 

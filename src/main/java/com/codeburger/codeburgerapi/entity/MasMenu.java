@@ -4,8 +4,10 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "mas_ingredient")
-public class MasIngredient {
+import java.util.List;
+
+@Document(collection = "mas_menu")
+public class MasMenu {
     @Id
     private String id;
     @NotNull
@@ -13,14 +15,14 @@ public class MasIngredient {
     @NotNull
     private String category;
     @NotNull
-    private Double price;
+    private List<MasMenuIngredients> ingredients;
 
-    public MasIngredient() {}
+    public MasMenu() {}
 
-    public MasIngredient(String name, String category, Double price) {
+    public MasMenu(String name, String category, List<MasMenuIngredients> ingredients) {
         this.name = name;
         this.category = category;
-        this.price = price;
+        this.ingredients = ingredients;
     }
 
     public String getName() {
@@ -31,8 +33,7 @@ public class MasIngredient {
         return category;
     }
 
-    public Double getPrice() {
-        return price;
+    public List<MasMenuIngredients> getIngredients() {
+        return ingredients;
     }
-
 }

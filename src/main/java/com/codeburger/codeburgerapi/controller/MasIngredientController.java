@@ -26,7 +26,7 @@ public class MasIngredientController {
 
     @GetMapping()
     public ResponseEntity<?> getIngredients() {
-        List<MasIngredient> query = masIngredientService.retrieveIngredients();
+        List<MasIngredient> query = masIngredientService.retrieve();
         Map<String, List<MasIngredientResponse>> data = query.stream()
                 .collect(groupingBy(
                         MasIngredient::getCategory,
@@ -38,7 +38,7 @@ public class MasIngredientController {
 
     @GetMapping("/{name}")
     public ResponseEntity<?> getIngredientInfo(@PathVariable String name) {
-        Optional<MasIngredient> data = masIngredientService.retrieveIngredientInfo(name);
+        Optional<MasIngredient> data = masIngredientService.retrieveInfo(name);
         if (data.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
@@ -47,7 +47,7 @@ public class MasIngredientController {
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<?> getIngredientByCategory(@PathVariable String categoryName) {
-        List<MasIngredient> query = masIngredientService.retrieveIngredientsByCategory(categoryName);
+        List<MasIngredient> query = masIngredientService.retrieveByCategory(categoryName);
         if (query.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
