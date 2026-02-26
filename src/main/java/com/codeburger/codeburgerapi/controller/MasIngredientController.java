@@ -1,5 +1,7 @@
 package com.codeburger.codeburgerapi.controller;
 
+import com.codeburger.codeburgerapi.dto.response.DataResponse;
+import com.codeburger.codeburgerapi.dto.response.ErrorResponse;
 import com.codeburger.codeburgerapi.entity.MasIngredient;
 import com.codeburger.codeburgerapi.service.MasIngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,24 +23,24 @@ public class MasIngredientController {
     @GetMapping()
     public ResponseEntity<?> getIngredients() {
         List<MasIngredient> data = masIngredientService.retrieveIngredients();
-        return ResponseEntity.ok(data);
+        return ResponseEntity.ok(new DataResponse<>(data));
     }
 
     @GetMapping("/{name}")
     public ResponseEntity<?> getIngredientInfo(@PathVariable String name) {
-        Optional<MasIngredient> existingData = masIngredientService.retrieveIngredientInfo(name);
-        if (existingData.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+        Optional<MasIngredient> data = masIngredientService.retrieveIngredientInfo(name);
+        if (data.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
-        return ResponseEntity.ok(existingData);
+        return ResponseEntity.ok(new DataResponse<>(data));
     }
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<?> getIngredientByCategory(@PathVariable String categoryName) {
         List<MasIngredient> data = masIngredientService.retrieveIngredientsByCategory(categoryName);
         if (data.isEmpty()) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
-        return ResponseEntity.ok(data);
+        return ResponseEntity.ok(new DataResponse<>(data));
     }
 }
