@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MasIngredientRepository extends MongoRepository<MasIngredient, String> {
+
     Optional<MasIngredient> findByName(String name);
+
     List<MasIngredient> findByCategory(String category);
+
 }

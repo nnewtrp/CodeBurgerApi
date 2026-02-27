@@ -2,6 +2,7 @@ package com.codeburger.codeburgerapi.controller;
 
 import com.codeburger.codeburgerapi.dto.response.DataResponse;
 import com.codeburger.codeburgerapi.dto.response.ErrorResponse;
+import com.codeburger.codeburgerapi.dto.response.MasMenuDetailResponse;
 import com.codeburger.codeburgerapi.entity.MasMenu;
 import com.codeburger.codeburgerapi.service.MasMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,12 @@ import static java.util.stream.Collectors.*;
 public class MasMenuController {
     @Autowired
     private MasMenuService masMenuService;
+
+    @GetMapping()
+    public ResponseEntity<?> getMenuList() {
+        List<MasMenuDetailResponse> data = masMenuService.retrieve();
+        return ResponseEntity.ok(new DataResponse<>(data));
+    }
 
     @GetMapping("/{name}")
     public ResponseEntity<?> getMenuInfo(@PathVariable String name) {

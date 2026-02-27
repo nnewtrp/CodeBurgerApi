@@ -1,5 +1,6 @@
 package com.codeburger.codeburgerapi.service;
 
+import com.codeburger.codeburgerapi.dto.response.MasMenuDetailResponse;
 import com.codeburger.codeburgerapi.entity.MasMenu;
 import com.codeburger.codeburgerapi.repository.MasMenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,8 @@ public class MasMenuService {
         this.repository = repository;
     }
 
-    public List<MasMenu> retrieve() {
-        return repository.findAll();
+    public List<MasMenuDetailResponse> retrieve() {
+        return repository.findAllDetails();
     }
 
     public Optional<MasMenu> retrieveInfo(String name) {
