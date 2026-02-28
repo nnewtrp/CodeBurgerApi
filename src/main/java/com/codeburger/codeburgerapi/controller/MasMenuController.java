@@ -3,6 +3,7 @@ package com.codeburger.codeburgerapi.controller;
 import com.codeburger.codeburgerapi.dto.response.DataResponse;
 import com.codeburger.codeburgerapi.dto.response.ErrorResponse;
 import com.codeburger.codeburgerapi.dto.response.MasMenuDetailResponse;
+import com.codeburger.codeburgerapi.dto.response.MasMenuHeaderResponse;
 import com.codeburger.codeburgerapi.entity.MasMenu;
 import com.codeburger.codeburgerapi.service.MasMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class MasMenuController {
 
     @GetMapping()
     public ResponseEntity<?> getMenuList() {
-        List<MasMenuDetailResponse> data = masMenuService.retrieve();
+        List<MasMenuHeaderResponse> data = masMenuService.retrieve();
         return ResponseEntity.ok(new DataResponse<>(data));
     }
 
