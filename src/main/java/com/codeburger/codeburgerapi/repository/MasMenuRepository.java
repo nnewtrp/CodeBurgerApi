@@ -28,6 +28,7 @@ public interface MasMenuRepository extends MongoRepository<MasMenu, String> {
     List<MasMenuHeaderResponse> findAllHeaders();
 
     @Aggregation(pipeline = {
+            "{ $match: { name: ?0 } }",
             "{ $unwind: { path: '$ingredients', preserveNullAndEmptyArrays: true } }",
             "{ $lookup: { from: 'mas_ingredient', localField: 'ingredients.name', " +
                     "foreignField: 'name', as: 'matched' } }",
@@ -43,10 +44,25 @@ public interface MasMenuRepository extends MongoRepository<MasMenu, String> {
             "{ $project: { _id: 0, id: { $toString: '$_id' }, name: 1, category: 1," +
                     "ingredients: 1, totalPrice: 1 } }"
     })
-    List<MasMenuDetailResponse> findAllDetails();
+    Optional<MasMenuDetailResponse> findByName(String name);
 
-    Optional<MasMenu> findByName(String name);
-
-    List<MasMenu> findByCategory(String category);
+    @Aggregation(pipeline = {
+            "{ $match: { category: ?0 } }",
+            "{ $unwind: { path: '$ingredients', preserveNullAndEmptyArrays: true } }",
+            "{ $lookup: { from: 'mas_ingredient', localField: 'ingredients.name', " +
+                    "foreignField: 'name', as: 'matched' } }",
+            "{ $unwind: { path: '$matched', preserveNullAndEmptyArrays: true } }",
+            "{ $project: {  _id: 1, name: 1, category: 1, ingredient: { " +
+                    "name: '$ingredients.name',  amount: '$ingredients.amount', " +
+                    "pricePerUnit: '$matched.price', lineTotal: { $cond: " +
+                    "[ { $and: [ { $ne: ['$matched.price', null] }, { $ne: ['$ingredients.amount', null] } ] }, " +
+                    "{ $multiply: ['$matched.price', '$ingredients.amount'] }, null ] } } } }",
+            "{ $group: { _id: '$_id', name: { $first: '$name' }, category: { $first: '$category' }, " +
+                    "ingredients: { $push: '$ingredient' }, totalPrice: {" +
+                    "$sum: { $ifNull: ['$ingredient.lineTotal', 0] } } } }",
+            "{ $project: { _id: 0, id: { $toString: '$_id' }, name: 1, category: 1," +
+                    "ingredients: 1, totalPrice: 1 } }"
+    })
+    List<MasMenuHeaderResponse> findByCategory(String category);
 
 }

@@ -33,7 +33,16 @@ public class MasMenuController {
 
     @GetMapping("/{name}")
     public ResponseEntity<?> getMenuInfo(@PathVariable String name) {
-        Optional<MasMenu> data = masMenuService.retrieveInfo(name);
+        Optional<MasMenuDetailResponse> data = masMenuService.retrieveInfo(name);
+        if (data.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
+        }
+        return ResponseEntity.ok(new DataResponse<>(data));
+    }
+
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<?> getMenuListByCategory(@PathVariable String categoryName) {
+        List<MasMenuHeaderResponse> data = masMenuService.retrieveByCategory(categoryName);
         if (data.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }

@@ -23,11 +23,11 @@ public class MasMenuService {
         return repository.findAllHeaders();
     }
 
-    public Optional<MasMenu> retrieveInfo(String name) {
+    public Optional<MasMenuDetailResponse> retrieveInfo(String name) {
         return repository.findByName(name);
     }
 
-    public List<MasMenu> retrieveByCategory(String category) {
+    public List<MasMenuHeaderResponse> retrieveByCategory(String category) {
         return repository.findByCategory(category);
     }
 
