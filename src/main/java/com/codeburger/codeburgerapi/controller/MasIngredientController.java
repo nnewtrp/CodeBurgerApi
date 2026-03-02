@@ -1,5 +1,6 @@
 package com.codeburger.codeburgerapi.controller;
 
+import com.codeburger.codeburgerapi.dto.response.DataInfoResponse;
 import com.codeburger.codeburgerapi.dto.response.DataResponse;
 import com.codeburger.codeburgerapi.dto.response.ErrorResponse;
 import com.codeburger.codeburgerapi.dto.response.MasIngredientResponse;
@@ -33,7 +34,8 @@ public class MasIngredientController {
                         mapping(i -> new MasIngredientResponse(i.getName(), i.getPrice()), toList()
                 ))
         );
-        return ResponseEntity.ok(new DataResponse<>(data));
+        Integer totalItems = query.toArray().length;
+        return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 
     @GetMapping("/{name}")
@@ -42,7 +44,7 @@ public class MasIngredientController {
         if (data.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
-        return ResponseEntity.ok(new DataResponse<>(data));
+        return ResponseEntity.ok(new DataInfoResponse<>(data));
     }
 
     @GetMapping("/category/{categoryName}")
@@ -54,6 +56,7 @@ public class MasIngredientController {
         List<MasIngredientResponse> data = query.stream().map(
                 i -> new MasIngredientResponse(i.getName(), i.getPrice())
         ).toList();
-        return ResponseEntity.ok(new DataResponse<>(data));
+        Integer totalItems = query.toArray().length;
+        return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 }

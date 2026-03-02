@@ -13,7 +13,7 @@ public class ErrorResponse {
         return message;
     }
 
-    public Boolean getSuccess() {
+    public Boolean getIsSuccess() {
         return false;
     }
 }

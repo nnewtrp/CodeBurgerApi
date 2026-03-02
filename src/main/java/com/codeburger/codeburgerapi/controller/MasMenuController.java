@@ -30,7 +30,8 @@ public class MasMenuController {
                         mapping(i -> new MasMenuHeaderResponse(i.getName(), i.getTotalPrice()), toList()
                 ))
         );
-        return ResponseEntity.ok(new DataResponse<>(data));
+        Integer totalItems = query.toArray().length;
+        return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 
     @GetMapping("/{name}")
@@ -39,7 +40,7 @@ public class MasMenuController {
         if (data.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
-        return ResponseEntity.ok(new DataResponse<>(data));
+        return ResponseEntity.ok(new DataInfoResponse<>(data));
     }
 
     @GetMapping("/category/{categoryName}")
@@ -51,6 +52,7 @@ public class MasMenuController {
         List<MasMenuHeaderResponse> data = query.stream().map(
                 i -> new MasMenuHeaderResponse(i.getName(), i.getTotalPrice())
         ).toList();
-        return ResponseEntity.ok(new DataResponse<>(data));
+        Integer totalItems = query.toArray().length;
+        return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 }
