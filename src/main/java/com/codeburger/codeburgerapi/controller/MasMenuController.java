@@ -1,10 +1,6 @@
 package com.codeburger.codeburgerapi.controller;
 
-import com.codeburger.codeburgerapi.dto.response.DataResponse;
-import com.codeburger.codeburgerapi.dto.response.ErrorResponse;
-import com.codeburger.codeburgerapi.dto.response.MasMenuDetailResponse;
-import com.codeburger.codeburgerapi.dto.response.MasMenuHeaderResponse;
-import com.codeburger.codeburgerapi.entity.MasMenu;
+import com.codeburger.codeburgerapi.dto.response.*;
 import com.codeburger.codeburgerapi.service.MasMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +23,13 @@ public class MasMenuController {
 
     @GetMapping()
     public ResponseEntity<?> getMenuList() {
-        List<MasMenuHeaderResponse> data = masMenuService.retrieve();
+        List<MasMenuDetailResponse> query = masMenuService.retrieve();
+        Map<String, List<MasMenuHeaderResponse>> data = query.stream()
+                .collect(groupingBy(
+                        MasMenuDetailResponse::getCategory,
+                        mapping(i -> new MasMenuHeaderResponse(i.getName(), i.getTotalPrice()), toList()
+                ))
+        );
         return ResponseEntity.ok(new DataResponse<>(data));
     }
 
@@ -42,10 +44,13 @@ public class MasMenuController {
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<?> getMenuListByCategory(@PathVariable String categoryName) {
-        List<MasMenuHeaderResponse> data = masMenuService.retrieveByCategory(categoryName);
-        if (data.isEmpty()) {
+        List<MasMenuDetailResponse> query = masMenuService.retrieveByCategory(categoryName);
+        if (query.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
+        List<MasMenuHeaderResponse> data = query.stream().map(
+                i -> new MasMenuHeaderResponse(i.getName(), i.getTotalPrice())
+        ).toList();
         return ResponseEntity.ok(new DataResponse<>(data));
     }
 }

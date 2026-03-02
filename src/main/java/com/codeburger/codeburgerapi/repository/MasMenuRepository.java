@@ -22,10 +22,13 @@ public interface MasMenuRepository extends MongoRepository<MasMenu, String> {
                     "[ { $and: [ { $ne: ['$matched.price', null] }, { $ne: ['$ingredients.amount', null] } ] }, " +
                     "{ $multiply: ['$matched.price', '$ingredients.amount'] }, null ] } } } }",
             "{ $group: { _id: '$_id', name: { $first: '$name' }, category: { $first: '$category' }, " +
-                    "totalPrice: { $sum: { $ifNull: ['$ingredient.lineTotal', 0] } } } }",
-            "{ $project: { _id: 0, id: { $toString: '$_id' }, name: 1, category: 1, totalPrice: 1 } }"
+                    "ingredients: { $push: '$ingredient' }, totalPrice: {" +
+                    "$sum: { $ifNull: ['$ingredient.lineTotal', 0] } } } }",
+            "{ $project: { _id: 0, id: { $toString: '$_id' }, name: 1, category: 1," +
+                    "ingredients: 1, totalPrice: 1 } }",
+            "{ '$sort': { 'category': 1, '_id': 1 } }"
     })
-    List<MasMenuHeaderResponse> findAllHeaders();
+    List<MasMenuDetailResponse> findAllHeaders();
 
     @Aggregation(pipeline = {
             "{ $match: { name: ?0 } }",
@@ -61,8 +64,9 @@ public interface MasMenuRepository extends MongoRepository<MasMenu, String> {
                     "ingredients: { $push: '$ingredient' }, totalPrice: {" +
                     "$sum: { $ifNull: ['$ingredient.lineTotal', 0] } } } }",
             "{ $project: { _id: 0, id: { $toString: '$_id' }, name: 1, category: 1," +
-                    "ingredients: 1, totalPrice: 1 } }"
+                    "ingredients: 1, totalPrice: 1 } }",
+            "{ '$sort': { '_id': 1 } }"
     })
-    List<MasMenuHeaderResponse> findByCategory(String category);
+    List<MasMenuDetailResponse> findByCategory(String category);
 
 }

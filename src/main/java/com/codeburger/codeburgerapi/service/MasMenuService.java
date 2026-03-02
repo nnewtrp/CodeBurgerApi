@@ -1,12 +1,11 @@
 package com.codeburger.codeburgerapi.service;
 
 import com.codeburger.codeburgerapi.dto.response.MasMenuDetailResponse;
-import com.codeburger.codeburgerapi.dto.response.MasMenuHeaderResponse;
-import com.codeburger.codeburgerapi.entity.MasMenu;
 import com.codeburger.codeburgerapi.repository.MasMenuRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public class MasMenuService {
         this.repository = repository;
     }
 
-    public List<MasMenuHeaderResponse> retrieve() {
+    public List<MasMenuDetailResponse> retrieve() {
         return repository.findAllHeaders();
     }
 
@@ -27,7 +26,7 @@ public class MasMenuService {
         return repository.findByName(name);
     }
 
-    public List<MasMenuHeaderResponse> retrieveByCategory(String category) {
+    public List<MasMenuDetailResponse> retrieveByCategory(String category) {
         return repository.findByCategory(category);
     }
 
