@@ -16,13 +16,16 @@ public class Order {
     @NotNull
     private List<OrderMenus> menus;
     @NotNull
+    private Double totalPrice;
+    @NotNull
     private LocalDateTime createDate;
 
     public Order() {}
 
-    public Order(String customerName, List<OrderMenus> menus, LocalDateTime createDate) {
+    public Order(String customerName, List<OrderMenus> menus, Double totalPrice, LocalDateTime createDate) {
         this.customerName = customerName;
         this.menus = menus;
+        this.totalPrice = totalPrice;
         this.createDate = createDate;
     }
 
@@ -32,6 +35,10 @@ public class Order {
 
     public List<OrderMenus> getMenus() {
         return menus;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
     }
 
     public LocalDateTime getCreateDate() {

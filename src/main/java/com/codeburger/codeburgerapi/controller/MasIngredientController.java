@@ -34,7 +34,7 @@ public class MasIngredientController {
                         mapping(i -> new MasIngredientResponse(i.getName(), i.getPrice()), toList()
                 ))
         );
-        Integer totalItems = query.toArray().length;
+        Integer totalItems = query.size();
         return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 
@@ -56,7 +56,7 @@ public class MasIngredientController {
         List<MasIngredientResponse> data = query.stream().map(
                 i -> new MasIngredientResponse(i.getName(), i.getPrice())
         ).toList();
-        Integer totalItems = query.toArray().length;
+        Integer totalItems = query.size();
         return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 }

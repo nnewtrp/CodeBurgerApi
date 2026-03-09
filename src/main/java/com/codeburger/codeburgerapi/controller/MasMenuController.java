@@ -30,7 +30,7 @@ public class MasMenuController {
                         mapping(i -> new MasMenuHeaderResponse(i.getName(), i.getTotalPrice()), toList()
                 ))
         );
-        Integer totalItems = query.toArray().length;
+        Integer totalItems = query.size();
         return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 
@@ -52,7 +52,7 @@ public class MasMenuController {
         List<MasMenuHeaderResponse> data = query.stream().map(
                 i -> new MasMenuHeaderResponse(i.getName(), i.getTotalPrice())
         ).toList();
-        Integer totalItems = query.toArray().length;
+        Integer totalItems = query.size();
         return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 }
