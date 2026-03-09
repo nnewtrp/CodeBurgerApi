@@ -1,11 +1,11 @@
 package com.codeburger.codeburgerapi.service;
 
-import com.codeburger.codeburgerapi.entity.MasIngredient;
 import com.codeburger.codeburgerapi.entity.Order;
 import com.codeburger.codeburgerapi.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,5 +24,9 @@ public class OrderService {
 
     public Optional<Order> retrieveInfoByCustomer(String customerName) {
         return repository.findByCustomerName(customerName);
+    }
+
+    public Order create(Order data) {
+        return repository.save(data);
     }
 }
