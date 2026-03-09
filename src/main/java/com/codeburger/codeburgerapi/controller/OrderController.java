@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
-
 @RestController
 @RequestMapping("order")
 public class OrderController {
@@ -30,9 +28,9 @@ public class OrderController {
     @GetMapping()
     public ResponseEntity<?> getOrderList() {
         List<Order> query = orderService.retrieve();
-        List<OrderResponse> data = query.stream().map(
-                i -> new OrderResponse(
-                        i.getCustomerName(), i.getMenus(), i.getTotalPrice(), i.getCreateDate()
+        List<OrderHeaderResponse> data = query.stream().map(
+                i -> new OrderHeaderResponse(
+                        i.getCustomerName(), i.getTotalPrice(), i.getCreateDate()
                 )
         ).toList();
         Integer totalItems = query.size();
