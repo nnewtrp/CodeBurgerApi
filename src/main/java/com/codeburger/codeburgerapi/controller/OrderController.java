@@ -75,4 +75,16 @@ public class OrderController {
 
         return ResponseEntity.ok(new DataInfoResponse<>(data));
     }
+
+    @DeleteMapping("/{customerName}")
+    public ResponseEntity<?> deleteOrder(@PathVariable String customerName) {
+        Optional<Order> existingData = orderService.retrieveInfoByCustomer(customerName);
+        if (existingData.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
+        }
+
+        orderService.delete(existingData.get());
+
+        return ResponseEntity.ok(new DataInfoResponse<>(customerName));
+    }
 }

@@ -5,7 +5,6 @@ import com.codeburger.codeburgerapi.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,11 @@ public class OrderService {
         return repository.findByCustomerName(customerName);
     }
 
-    public Order create(Order data) {
-        return repository.save(data);
+    public void create(Order data) {
+        repository.save(data);
+    }
+
+    public void delete(Order data) {
+        repository.delete(data);
     }
 }
