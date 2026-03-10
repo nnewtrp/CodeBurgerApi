@@ -38,4 +38,8 @@ public class OrderService {
     public void delete(Order data) {
         repository.delete(data);
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

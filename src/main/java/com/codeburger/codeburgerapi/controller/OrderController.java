@@ -97,4 +97,10 @@ public class OrderController {
 
         return ResponseEntity.ok(new DataInfoResponse<>(data));
     }
+
+    @DeleteMapping()
+    public ResponseEntity<?> deleteAllOrder() {
+        orderService.deleteAll();
+        return ResponseEntity.ok(new DataInfoResponse<>("Remove all orders success"));
+    }
 }
