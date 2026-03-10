@@ -86,6 +86,47 @@ public class OrderController {
         return ResponseEntity.ok(new DataInfoResponse<>(data));
     }
 
+    @PutMapping("/{customerName}")
+    public ResponseEntity<?> updateOrder(@PathVariable String customerName,
+                                         @RequestBody OrderRequest request) {
+        Optional<Order> existingData = orderService.retrieveInfoByCustomer(customerName);
+        if (existingData.isEmpty()) {
+            return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
+        }
+
+        List<MasMenuDetailResponse> menuQuery = masMenuService.retrieve();
+        Map<String, Double> menuPrice = menuQuery.stream().collect(
+                Collectors.toMap(MasMenuDetailResponse::getName, MasMenuDetailResponse::getTotalPrice)
+        );
+
+        double totalPrice = 0;
+        List<OrderMenus> menus = new ArrayList<>();
+
+        for (OrderMenusRequest menusRequest: request.getMenus()) {
+            String menuName = menusRequest.getName();
+            if (!menuPrice.containsKey(menuName)) {
+                return ResponseEntity.badRequest().body(new ErrorResponse("Menu NotFound - " + menuName));
+            }
+
+            double pricePerUnit = menuPrice.get(menuName);
+            int amount = menusRequest.getAmount();
+            totalPrice += pricePerUnit * amount;
+
+            menus.add(new OrderMenus(menuName, pricePerUnit, amount));
+        }
+
+        LocalDateTime createDate = LocalDateTime.now();
+
+        Order data = existingData.get();
+        data.setMenus(menus);
+        data.setTotalPrice(totalPrice);
+        data.setCreateDate(createDate);
+
+        orderService.update(data);
+
+        return ResponseEntity.ok(new DataInfoResponse<>(data));
+    }
+
     @DeleteMapping("/{customerName}")
     public ResponseEntity<?> deleteOrder(@PathVariable String customerName) {
         Optional<Order> data = orderService.retrieveInfoByCustomer(customerName);

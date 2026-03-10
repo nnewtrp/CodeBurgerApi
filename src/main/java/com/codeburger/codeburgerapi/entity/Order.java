@@ -37,11 +37,23 @@ public class Order {
         return menus;
     }
 
+    public void setMenus(List<OrderMenus> menus) {
+        this.menus = menus;
+    }
+
     public Double getTotalPrice() {
         return totalPrice;
     }
 
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     public LocalDateTime getCreateDate() {
         return createDate;
+    }
+
+    public void setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
     }
 }

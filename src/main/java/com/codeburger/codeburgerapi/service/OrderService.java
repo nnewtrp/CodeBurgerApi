@@ -35,6 +35,10 @@ public class OrderService {
         repository.save(data);
     }
 
+    public void update(Order data) {
+        repository.save(data);
+    }
+
     public void delete(Order data) {
         repository.delete(data);
     }
