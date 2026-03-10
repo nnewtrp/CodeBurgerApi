@@ -8,6 +8,7 @@ import com.codeburger.codeburgerapi.entity.OrderMenus;
 import com.codeburger.codeburgerapi.service.MasMenuService;
 import com.codeburger.codeburgerapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,14 +29,15 @@ public class OrderController {
     private MasMenuService masMenuService;
 
     @GetMapping()
-    public ResponseEntity<?> getOrderList() {
-        List<Order> query = orderService.retrieve();
+    public ResponseEntity<?> getOrderList(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int pageSize) {
+        Page<Order> query = orderService.retrieve(page, pageSize);
         List<OrderHeaderResponse> data = query.stream().map(
                 i -> new OrderHeaderResponse(
                         i.getCustomerName(), i.getTotalPrice(), i.getCreateDate()
                 )
         ).toList();
-        Integer totalItems = query.size();
+        Integer totalItems = orderService.retrieveCount();
         return ResponseEntity.ok(new DataResponse<>(totalItems, data));
     }
 
@@ -52,7 +54,7 @@ public class OrderController {
     public ResponseEntity<?> createOrder(@RequestBody OrderRequest request) {
         Optional<Order> existingData = orderService.retrieveInfoByCustomer(request.getCustomerName());
         if (existingData.isPresent()) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("Duplicate Data"));
+            return ResponseEntity.badRequest().body(new ErrorResponse("Duplicate Customer"));
         }
 
         List<MasMenuDetailResponse> menuQuery = masMenuService.retrieve();
