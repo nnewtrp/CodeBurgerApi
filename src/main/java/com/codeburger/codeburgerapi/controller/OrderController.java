@@ -1,5 +1,6 @@
 package com.codeburger.codeburgerapi.controller;
 
+import com.codeburger.codeburgerapi.dto.request.OrderMenusRequest;
 import com.codeburger.codeburgerapi.dto.request.OrderRequest;
 import com.codeburger.codeburgerapi.dto.response.*;
 import com.codeburger.codeburgerapi.entity.Order;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,18 +61,24 @@ public class OrderController {
         );
 
         double totalPrice = 0;
+        List<OrderMenus> menus = new ArrayList<>();
 
-        for (OrderMenus menus: request.getMenus()) {
-            String menuName = menus.getName();
+        for (OrderMenusRequest menusRequest: request.getMenus()) {
+            String menuName = menusRequest.getName();
             if (!menuPrice.containsKey(menuName)) {
                 return ResponseEntity.badRequest().body(new ErrorResponse("Menu NotFound - " + menuName));
             }
-            totalPrice += menuPrice.get(menuName) * menus.getAmount();
+
+            double pricePerUnit = menuPrice.get(menuName);
+            int amount = menusRequest.getAmount();
+            totalPrice += pricePerUnit * amount;
+
+            menus.add(new OrderMenus(menuName, pricePerUnit, amount));
         }
 
         LocalDateTime createDate = LocalDateTime.now();
 
-        Order data = new Order(request.getCustomerName(), request.getMenus(), totalPrice, createDate);
+        Order data = new Order(request.getCustomerName(), menus, totalPrice, createDate);
         orderService.create(data);
 
         return ResponseEntity.ok(new DataInfoResponse<>(data));
@@ -78,13 +86,13 @@ public class OrderController {
 
     @DeleteMapping("/{customerName}")
     public ResponseEntity<?> deleteOrder(@PathVariable String customerName) {
-        Optional<Order> existingData = orderService.retrieveInfoByCustomer(customerName);
-        if (existingData.isEmpty()) {
+        Optional<Order> data = orderService.retrieveInfoByCustomer(customerName);
+        if (data.isEmpty()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("Data NotFound"));
         }
 
-        orderService.delete(existingData.get());
+        orderService.delete(data.get());
 
-        return ResponseEntity.ok(new DataInfoResponse<>(customerName));
+        return ResponseEntity.ok(new DataInfoResponse<>(data));
     }
 }

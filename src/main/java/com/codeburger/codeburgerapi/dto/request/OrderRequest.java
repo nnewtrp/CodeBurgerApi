@@ -7,11 +7,11 @@ import java.util.List;
 
 public class OrderRequest {
     private String customerName;
-    private List<OrderMenus> menus;
+    private List<OrderMenusRequest> menus;
 
     public OrderRequest() {}
 
-    public OrderRequest(String customerName, List<OrderMenus> menus) {
+    public OrderRequest(String customerName, List<OrderMenusRequest> menus) {
         this.customerName = customerName;
         this.menus = menus;
     }
@@ -20,7 +20,7 @@ public class OrderRequest {
         return customerName;
     }
 
-    public List<OrderMenus> getMenus() {
+    public List<OrderMenusRequest> getMenus() {
         return menus;
     }
 }
