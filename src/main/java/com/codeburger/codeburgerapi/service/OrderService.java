@@ -21,7 +21,7 @@ public class OrderService {
     }
 
     public Page<Order> retrieve(Integer page, Integer pageSize) {
-        Pageable pageable = PageRequest.of(page, pageSize);
+        Pageable pageable = PageRequest.of(page-1, pageSize);
         return repository.findAll(pageable);
     }
 

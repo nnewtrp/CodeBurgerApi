@@ -29,7 +29,7 @@ public class OrderController {
     private MasMenuService masMenuService;
 
     @GetMapping()
-    public ResponseEntity<?> getOrderList(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<?> getOrderList(@RequestParam(defaultValue = "1") int page,
                                           @RequestParam(defaultValue = "10") int pageSize) {
         Page<Order> query = orderService.retrieve(page, pageSize);
         List<OrderHeaderResponse> data = query.stream().map(
