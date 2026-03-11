@@ -8,4 +8,6 @@ RUN chmod +x mvnw
 
 RUN ./mvnw clean package -DskipTests
 
-CMD ["java","-jar","target/CodeBurgerApi-0.0.1-SNAPSHOT.jar"]
+EXPOSE 5000
+
+CMD ["sh","-c","java -jar target/*.jar"]
