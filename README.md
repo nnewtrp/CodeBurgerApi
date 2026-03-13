@@ -81,7 +81,7 @@ server.servlet.contextPath=/api
 
 ### 4️⃣ Run the Application
 ```bash
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 or
