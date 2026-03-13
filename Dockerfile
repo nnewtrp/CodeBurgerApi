@@ -19,7 +19,7 @@ FROM eclipse-temurin:25-jdk
 WORKDIR /app
 
 # Copy jar to a stable name
-COPY --from=build /app/target/*.jar /app/app.jar
+COPY --from=build /app/target/app.jar /app/app.jar
 
 # Railway uses PORT; expose 8080 is fine for documentation, not mandatory
 EXPOSE 8080
